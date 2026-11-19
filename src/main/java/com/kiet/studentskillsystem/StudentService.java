@@ -63,4 +63,25 @@ public class StudentService {
     public List<Student> needsProgrammingImprovementButStrongMaths() {
         return repo.findByProgrammingScoreLessThanAndMathematicsScoreGreaterThanEqual(50, 75);
     }
+    // ---- Q3 support ----
+    public List<Student> getAllStudents() {
+        return repo.findAll();
+    }
+
+    public Student getStudentById(int id) {
+        return repo.findById(id).orElseThrow(() -> new StudentNotFoundException(id));
+    }
+
+    public Student updateScoresAndSkills(int id, UpdateRequest req) {
+        validateScores(req.programmingScore(), req.mathematicsScore());
+        Student s = getStudentById(id);
+        s.setProgrammingScore(req.programmingScore());
+        s.setMathematicsScore(req.mathematicsScore());
+        s.setSkills(req.skills());
+        return repo.save(s);
+    }
+
+    public void deleteStudent(int id) {
+        repo.delete(getStudentById(id));
+    }
 }
